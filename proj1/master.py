@@ -1,28 +1,46 @@
 import socket
 import sys
+import threading
 
-# Create a TCP/IP socket
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# Bind the socket to the port
-server_addr = ('localhost', 10000)
-print('starting up on %s port %s' % server_addr, file=sys.stderr)
-sock.bind(server_addr)
+def handle_node(connection, node_addr):
+    try:
+        print(f'connection from {node_addr}', file=sys.stderr)
 
-# Listen for incoming connections
-sock.listen(1)
+        # recieve data
+        data = connection.recv(1024).decode('utf-8')
+        if data:
+            print(f'Message from {node_addr}: {data}', file=sys.stderr)
+    except Exception as e:
+        print(
+            f'Error handling connection from {node_addr}: {e}', file=sys.stderr)
+    finally:
+        # close connection
+        connection.close()
 
-while True:
-    # Wait for a connection
-    print('waiting for a connection', file=sys.stderr)
-    connection, client_addr = sock.accept()
 
-    # Message read from connection
-    print('connection from', client_addr, file=sys.stderr)
+def master_thread(master_addr=('localhost', 10000)):
+    # Create a TCP/IP socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    # Recieve data
-    data = connection.recv(1024).decode('utf-8')
-    print('message from node: ', data, file=sys.stderr)
+    # Allow reusing address
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-    # Close up the connection
-    connection.close()
+    # Bind the socket to the port
+    print('starting up on %s port %s' % master_addr, file=sys.stderr)
+    sock.bind(master_addr)
+    sock.listen(5)
+
+    while True:
+        # Wait for a connection
+        print('waiting for a connection', file=sys.stderr)
+        connection, node_addr = sock.accept()
+
+        # create new thread for each incoming connection
+        node_thread = threading.Thread(
+            target=handle_node, args=(connection, node_addr))
+        node_thread.start()
+
+
+if __name__ == "__main__":
+    master_thread()
