@@ -3,7 +3,7 @@ import sys
 import threading
 
 
-def node_thread(id, master_addr=('localhost', 10000)):
+def node_thread(id, master_addr=('localhost', 5000)):
     # Create TCP/IP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -33,13 +33,16 @@ def main():
     # declare number of nodes
     numThreads = 4
 
+    # list to store theads
     threads = []
 
+    # create and start node threads
     for i in range(numThreads):
         thread = threading.Thread(target=node_thread, args=(i+1,))
         threads.append(thread)
         thread.start()
 
+    # wait for threads to start
     for thread in threads:
         thread.join()
 
