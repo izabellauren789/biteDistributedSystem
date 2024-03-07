@@ -3,7 +3,7 @@ import sys
 import threading
 
 
-def node_thread(id, master_addr=('node-client', 5000)):
+def node_thread(id, master_addr=('master-server', 5000)):
     # Create TCP/IP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 

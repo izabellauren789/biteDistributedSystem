@@ -19,7 +19,7 @@ def handle_node(connection, node_addr):
         connection.close()
 
 
-def master_thread(master_addr=('master-server', 5000)):
+def master_thread(master_addr=('0.0.0.0', 5000)):
     # Create a TCP/IP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
