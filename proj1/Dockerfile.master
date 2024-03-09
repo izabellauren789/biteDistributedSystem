@@ -2,4 +2,4 @@ FROM python:3.8
 WORKDIR /app
 COPY master.py .
 EXPOSE 5000
-CMD ["python", "./master.py"]
+CMD ["python", "-u", "./master.py"]

@@ -9,7 +9,7 @@ def node_thread(id, master_addr=('master-server', 5000)):
 
     # Attempt to connect to the server
     try:
-        print(f'node {id} connecting to {master_addr}', file=sys.stderr)
+        print(f'node {id} connecting to {master_addr}')
         sock.connect(master_addr)
     except socket.error as e:
         print(f'node {id} failed to connect to {master_addr}: {e}',
@@ -20,12 +20,12 @@ def node_thread(id, master_addr=('master-server', 5000)):
     try:
         # Send data
         message = f"Hello Master from node {id}!"
-        print(f'node {id}: sending {message}', file=sys.stderr)
+        print(f'node {id}: sending {message}')
         sock.sendall(message.encode('utf-8'))
     except socket.error as e:
-        print(f'node {id} failed to send data: {e}', file=sys.stderr)
+        print(f'node {id} failed to send data: {e}')
     finally:
-        print(f'node {id} closing socket', file=sys.stderr)
+        print(f'node {id} closing socket')
         sock.close()
 
 
