@@ -21,12 +21,14 @@ def log_communication(type, time, source_ip, destination_ip, source_port, destin
             writer.writerow([type, datetime.fromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S'), source_ip, destination_ip, source_port, destination_port, protocol, length, flags])
 
 
-def main(id, master_addr=('master-server', 5000)):
+def main(id, master_addr=('unicast-master', 5000)):
+    local_ip = '0.0.0.0'
+    local_port = 'N/A' 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         try:
             print(f'Node {id} connecting to {master_addr}')
             sock.connect(master_addr)
-            local_ip = socket.gethostbyname(socket.gethostname())  # Local IP address
+            local_ip = sock.getsockname()[0]  # Local IP address
             local_port = sock.getsockname()[1]  # Local port used for the connection
             # Log the connection attempt
             log_communication('Unicast Connection Attempt', datetime.now().timestamp(), local_ip, master_addr[0], str(local_port), str(master_addr[1]), 'TCP', 'N/A', 'N/A')

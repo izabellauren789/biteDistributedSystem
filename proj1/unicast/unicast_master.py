@@ -28,6 +28,7 @@ node_connections = []
 accepting = True
 
 def handle_node(connection, node_addr):
+    connection.settimeout(5) 
     print(f'Connection from {node_addr}')
     # Here you might handle initial handshaking or authentication
     log_communication('Unicast Connection', datetime.now().timestamp(), '0.0.0.0', node_addr[0], '5000', str(node_addr[1]), 'TCP', 'N/A', 'N/A')
@@ -40,6 +41,7 @@ def send_unicast_messages():
         try:
             print(f'Sending message to {node_addr}')
             connection.sendall(message.encode('utf-8'))
+            local_ip = connection.getsockname()[0]
             log_communication('Unicast Sent', datetime.now().timestamp(), '0.0.0.0', node_addr[0], '5000', str(node_addr[1]), 'TCP', len(message), 'N/A')
         except Exception as e:
             print(f'Error sending message to {node_addr}: {e}')
