@@ -15,17 +15,24 @@ $ docker build -t multicast-master -f Dockerfile.MCmaster . -> build master imag
 
 $ docker build -t multicast-node -f Dockerfile.MCnode . -> build node image
 
-$ docker run --rm -d --network Proj1-distributed-network --name master -v network_logs:/app/logs multicast-master  -> run container for master, output shown in logs
+$ docker run --rm -d \                                                                               
+  --name multicast-receiver1 \
+  --network Proj1-distributed-network \
+  -v network_logs:/app/logs \
+  multicast-master
 
-$ docker run --rm --network Proj1-distributed-network -v network_logs:/app/logs multicast-node 1 "Message from node 1" -> runs node 1
+$ docker run --rm -d \                                                                               
+  --name multicast-receiver2 \
+  --network Proj1-distributed-network \
+  -v network_logs:/app/logs \
+  multicast-master
 
-$ docker run --rm --network Proj1-distributed-network -v network_logs:/app/logs multicast-node 2 "Message from node 2" -> runs node 2
+$ docker run --rm --network Proj1-distributed-network -v network_logs:/app/logs multicast-node 1 "Hello Multicast World! From node 1"
 
-$ docker run --rm --network Proj1-distributed-network -v network_logs:/app/logs multicast-node 3 "Message from node 3" -> runs node 3
+$ docker run --rm --network Proj1-distributed-network -v network_logs:/app/logs multicast-node 2 "Hello Multicast World! From node 2"
 
-$ docker run --rm --network Proj1-distributed-network -v network_logs:/app/logs multicast-node 4 "Message from node 4" -> runs node 4
 
-output for node connections are shown in the terminal. Output for network logging shown in the volume in docker desktop.
+output for node connections are shown in the terminal. Output for network logging shown in the volume in docker desktop. Output for receivers are located in docker logs.
 
 
 
