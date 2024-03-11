@@ -8,6 +8,7 @@ Docker desktop must be installed.
 **Do not include the $ and the '-> ...' **
 
 First, create network.
+
 $ docker network create --driver bridge Proj1-distributed-network
 
 For multicast, execute the following commands in this order in the terminal:
