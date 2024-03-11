@@ -1,3 +1,4 @@
+# Done by Izabel Smid - 027494569
 import socket
 import sys
 import threading

@@ -1,3 +1,4 @@
+# Done by Izabel Smid - 027494569
 FROM python:3.8
 WORKDIR /app
 COPY node.py .

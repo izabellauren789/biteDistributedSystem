@@ -1,11 +1,13 @@
+# Done by Izabel Smid - 027494569
 import socket
 import struct
 import csv
 from datetime import datetime
 
 def log_communication(type, time, source_ip, destination_ip, source_port, destination_port, protocol, length, flags):
-        log_file = 'network_communications.csv'
-        log_headers = ['Type', 'Time(s)', 'Source_Ip', 'Destination_Ip', 'Source_Port', 'Destination_Port', 'Protocol', 'Length (bytes)', 'Flags (hex)']
+        log_file = '/app/logs/network_communications.csv'
+
+        log_headers = ['Type', ' Time(s)', ' Source_Ip', ' Destination_Ip', ' Source_Port', ' Destination_Port', ' Protocol', ' Length (bytes)', ' Flags (hex)']
     
         # Check if log file exists and if headers are needed
         try:
