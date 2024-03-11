@@ -5,6 +5,8 @@ To compile the code, make sure to be in the correct directory(ex: multicast and 
 
 Docker desktop must be installed.
 
+**Do not include the $ and the '-> ...' **
+
 For multicast, execute the following commands in this order in the terminal:
 
 $ docker volume create network_logs -> to store network logging data
