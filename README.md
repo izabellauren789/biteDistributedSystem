@@ -30,6 +30,21 @@ $ docker run --rm --network Proj1-distributed-network -v network_logs:/app/logs 
 
 output for node connections are shown in the terminal. Output for network logging shown in the volume in docker desktop. Output for receivers are located in docker logs.
 
+For unicast:
+
+$ docker build -t unicast-master -f Dockerfile.UCmaster .
+
+$ docker build -t unicast-node -f Dockerfile.UCnode .
+
+$ docker run --rm  --network Proj1-distributed-network --name unicast-master -v network_logs:/app/logs unicast-master
+
+open new terminal window in the same directory
+
+$ docker run --rm  --network Proj1-distributed-network --name node1 -v network_logs:/app/logs unicast-node 1
+
+network logging shown in volumes. rest of output should be in the terminal
+
+
 
 
 
