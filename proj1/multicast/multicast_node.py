@@ -1,6 +1,24 @@
 import socket
 import sys
 import struct
+import csv
+from datetime import datetime
+
+def log_communication(type, time, source_ip, destination_ip, source_port, destination_port, protocol, length, flags):
+    log_file = 'network_communications.csv'
+    log_headers = ['Type', 'Time(s)', 'Source_Ip', 'Destination_Ip', 'Source_Port', 'Destination_Port', 'Protocol', 'Length (bytes)', 'Flags (hex)']
+    
+    # Check if log file exists and if headers are needed
+    try:
+        with open(log_file, 'x', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(log_headers)
+    except FileExistsError:
+        pass
+
+    with open(log_file, 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([type, datetime.fromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S'), source_ip, destination_ip, source_port, destination_port, protocol, length, flags])
 
 
 def multicast_sender(node_id, message, multicast_group=('224.0.0.1', 5000)):
@@ -16,7 +34,10 @@ def multicast_sender(node_id, message, multicast_group=('224.0.0.1', 5000)):
     # Add to multicast group
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
 
+    local_ip = socket.gethostbyname(socket.gethostname())  # Get the local IP address
+
     try:
+        log_communication('Multicast Sent', datetime.now().timestamp(), local_ip, multicast_group[0], str(sock.getsockname()[1]), str(multicast_group[1]), 'UDP', len(message), '0x010')
         # send data to the multicast group
         print(f'sending {message}')
         sent = sock.sendto(message.encode(), multicast_group)
@@ -31,8 +52,10 @@ def multicast_sender(node_id, message, multicast_group=('224.0.0.1', 5000)):
                 print(f'timed out... no responses')
                 break
             else:
-                if data.decode() == 'ack':
+                received_message = data.decode()
+                if received_message == 'ack':
                     print(f'received acknowledgement from {server}')
+                    log_communication('Multicast Ack Received', datetime.now().timestamp(), server[0], local_ip, str(server[1]), str(sock.getsockname()[1]), 'UDP', len(received_message), '0x011')
                     break
                 else:
                     print(

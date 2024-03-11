@@ -1,5 +1,23 @@
 import socket
 import struct
+import csv
+from datetime import datetime
+
+def log_communication(type, time, source_ip, destination_ip, source_port, destination_port, protocol, length, flags):
+        log_file = 'network_communications.csv'
+        log_headers = ['Type', 'Time(s)', 'Source_Ip', 'Destination_Ip', 'Source_Port', 'Destination_Port', 'Protocol', 'Length (bytes)', 'Flags (hex)']
+    
+        # Check if log file exists and if headers are needed
+        try:
+            with open(log_file, 'x', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(log_headers)
+        except FileExistsError:
+            pass
+
+        with open(log_file, 'a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([type, datetime.fromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S'), source_ip, destination_ip, source_port, destination_port, protocol, length, flags])
 
 
 def multicast_receiver(master_addr=('224.0.0.1', 5000)):
@@ -26,10 +44,24 @@ def multicast_receiver(master_addr=('224.0.0.1', 5000)):
         print(f'waiting to receive message')
         data, address = sock.recvfrom(1024)
 
+        # calling log function after receiving a multicast message
+        log_communication(
+            'Multicast', 
+            datetime.now().timestamp(), 
+            address[0], 
+            master_addr[0], 
+            str(address[1]), 
+            str(master_addr[1]), 
+            'UDP', 
+            len(data), 
+            '0x011'
+        )
+
         print(f'received {data.decode()} from {address}')
 
         print(f'sending acknowledgement to', address)
         sock.sendto(b'ack', address)
+
 
 
 if __name__ == "__main__":

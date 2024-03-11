@@ -8,6 +8,5 @@ WORKDIR /app
 COPY . .
 
 # Run the script when the container launches
-# Note: The CMD will be overridden if specified in the docker run command
 CMD ["python3", "-u", "./multicast_master.py"]
 
