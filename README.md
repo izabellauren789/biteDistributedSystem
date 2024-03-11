@@ -19,17 +19,9 @@ $ docker build -t multicast-master -f Dockerfile.MCmaster . -> build master imag
 
 $ docker build -t multicast-node -f Dockerfile.MCnode . -> build node image
 
-$ docker run --rm -d \                                                                               
-  --name multicast-receiver1 \
-  --network Proj1-distributed-network \
-  -v network_logs:/app/logs \
-  multicast-master
+$ docker run --rm -d --name multicast-receiver1 --network Proj1-distributed-network -v network_logs:/app/logs multicast-master
 
-$ docker run --rm -d \                                                                               
-  --name multicast-receiver2 \
-  --network Proj1-distributed-network \
-  -v network_logs:/app/logs \
-  multicast-master
+$ docker run --rm -d --name multicast-receiver2 --network Proj1-distributed-network -v network_logs:/app/logs multicast-master
 
 $ docker run --rm --network Proj1-distributed-network -v network_logs:/app/logs multicast-node 1 "Hello Multicast World! From node 1"
 
