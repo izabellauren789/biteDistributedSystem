@@ -3,7 +3,7 @@ import socket
 import sys
 
 
-def node_thread(id, master_addr=('master-server', 5000)):
+def main(id, master_addr=('master-server', 5000)):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         try:
             print(f'Node {id} connecting to {master_addr}')
@@ -12,8 +12,8 @@ def node_thread(id, master_addr=('master-server', 5000)):
             data = sock.recv(1024)
             print(f'Node {id} received: {data.decode("utf-8")}')
         except Exception as e:
-            print(
-                f'Node {id} failed to connect or receive from {master_addr}: {e}', file=sys.stderr)
+            print(f'Node {id} failed to connect or receive from {master_addr}: {e}', file=sys.stderr)
+            sys.exit(1)
 
 
 if __name__ == '__main__':
